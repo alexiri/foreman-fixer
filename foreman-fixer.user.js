@@ -33,7 +33,7 @@ links.each(function() {
             newtext = "~"+format(now-match[1]*3600000);
         }
         if (newtext) {
-       		$(this).text(newtext + " ("+text+")");
+            $(this).text(newtext + " ("+text+")");
         }
     }
 });
@@ -45,19 +45,19 @@ trs.each(function() {
         var text = $(tds[0]).text();
         if(text == 'Console Username' || text == 'Console Password') {
             var data = $(tds[1]).text();
-            
+
             $(tds[1]).html($("<span>").attr('id', 'copyme').text(data));
             $(tds[1]).append($("<span>").html("&nbsp;"));
             $(tds[1]).append(
                 $("<a>")
-                	.attr('id', 'copy-button')
-                	.text("copy")
-                	.on('click', function (e) {
+                    .attr('id', 'copy-button')
+                    .text("copy")
+                    .on('click', function (e) {
                         GM_setClipboard($('span#copyme', tds[1]).text());
-   					    e.preventDefault();
+                        e.preventDefault();
 					})
             );
-            
+
         }
     }
 });
