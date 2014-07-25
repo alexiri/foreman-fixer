@@ -1,5 +1,3 @@
-
-
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
@@ -55,7 +53,7 @@ trs.each(function() {
                     .on('click', function (e) {
                         GM_setClipboard($('span#copyme', tds[1]).text());
                         e.preventDefault();
-					})
+                    })
             );
 
         }
