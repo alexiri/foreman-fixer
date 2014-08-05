@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    0.3
+// @version    0.4
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @copyright  2013+, Alex Iribarren
@@ -61,8 +61,17 @@ if (nameF) {
     addCopy(nameF.siblings()[0]);
     addCopy(pwdF.siblings()[0]);
 
-    /* I wish this worked...
+    // Now make the Console link log in directly
     var consoleF = $("a:contains(Console)");
 
-    consoleF[0].href += 'cgi/login.cgi?name='+encodeURI(username)+'&pwd='+encodeURI(password);*/
+    var form = $('<form>')
+        .attr('target', '_blank')
+        .attr('method', 'post')
+        .css('display', 'none')
+        .attr('action', consoleF[0].href + 'cgi/login.cgi')
+        .append($('<input>').attr('name', 'name').attr('value', username).attr('type', 'hidden'))
+        .append($('<input>').attr('name', 'pwd').attr('value', password).attr('type', 'hidden'));
+
+    consoleF.parent().append(form);
+    consoleF.on('click', function (e) { form.submit(); e.preventDefault(); });
 }
