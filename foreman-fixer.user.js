@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    0.2
+// @version    0.3
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @copyright  2013+, Alex Iribarren
@@ -36,26 +36,33 @@ links.each(function() {
     }
 });
 
-var trs = $('tr');
-trs.each(function() {
-    var tds = $('td', this);
-    if(tds.length == 2) {
-        var text = $(tds[0]).text();
-        if(text == 'Console Username' || text == 'Console Password') {
-            var data = $(tds[1]).text();
+function addCopy(item) {
+    $(item).html($("<span>").attr('id', 'copyme').text($(item).text()));
+    $(item).append($("<span>").html("&nbsp;"));
+    $(item).append(
+        $("<a>")
+            .attr('id', 'copy-button')
+            .text("copy")
+            .on('click', function (e) {
+                GM_setClipboard($('span#copyme', item).text());
+                e.preventDefault();
+            })
+    );
+}
 
-            $(tds[1]).html($("<span>").attr('id', 'copyme').text(data));
-            $(tds[1]).append($("<span>").html("&nbsp;"));
-            $(tds[1]).append(
-                $("<a>")
-                    .attr('id', 'copy-button')
-                    .text("copy")
-                    .on('click', function (e) {
-                        GM_setClipboard($('span#copyme', tds[1]).text());
-                        e.preventDefault();
-                    })
-            );
+var nameF = $("td:contains(Console Username)");
+if (nameF) {
 
-        }
-    }
-});
+    username = nameF.siblings().text();
+
+    var pwdF = $("td:contains(Console Password)");
+    var password = pwdF.siblings().text();
+
+    addCopy(nameF.siblings()[0]);
+    addCopy(pwdF.siblings()[0]);
+
+    /* I wish this worked...
+    var consoleF = $("a:contains(Console)");
+
+    consoleF[0].href += 'cgi/login.cgi?name='+encodeURI(username)+'&pwd='+encodeURI(password);*/
+}
