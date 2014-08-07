@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    0.4
+// @version    0.5
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
+// @match      https://judy-ext.cern.ch/*
 // @copyright  2013+, Alex Iribarren
 // @downloadURL https://raw.githubusercontent.com/alexiri/foreman-fixer/master/foreman-fixer.user.js
 // @require http://code.jquery.com/jquery-latest.min.js
