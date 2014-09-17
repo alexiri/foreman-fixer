@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    0.5
+// @version    0.6
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -76,3 +76,8 @@ if (nameF) {
     consoleF.parent().append(form);
     consoleF.on('click', function (e) { form.submit(); e.preventDefault(); });
 }
+
+// Don't abbreviate stuff (particularly environment names)
+$('span:not(.label)[data-original-title]').each(function() {
+    $(this).text($(this).attr('data-original-title'));
+});
