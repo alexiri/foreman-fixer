@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    0.6
+// @version    0.7
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -65,16 +65,18 @@ if (nameF) {
     // Now make the Console link log in directly
     var consoleF = $("a:contains(Console)");
 
-    var form = $('<form>')
-        .attr('target', '_blank')
-        .attr('method', 'post')
-        .css('display', 'none')
-        .attr('action', consoleF[0].href + 'cgi/login.cgi')
-        .append($('<input>').attr('name', 'name').attr('value', username).attr('type', 'hidden'))
-        .append($('<input>').attr('name', 'pwd').attr('value', password).attr('type', 'hidden'));
+    if (consoleF.length > 0) {
+        var form = $('<form>')
+            .attr('target', '_blank')
+            .attr('method', 'post')
+            .css('display', 'none')
+            .attr('action', consoleF[0].href + 'cgi/login.cgi')
+            .append($('<input>').attr('name', 'name').attr('value', username).attr('type', 'hidden'))
+            .append($('<input>').attr('name', 'pwd').attr('value', password).attr('type', 'hidden'));
 
-    consoleF.parent().append(form);
-    consoleF.on('click', function (e) { form.submit(); e.preventDefault(); });
+        consoleF.parent().append(form);
+        consoleF.on('click', function (e) { form.submit(); e.preventDefault(); });
+    }
 }
 
 // Don't abbreviate stuff (particularly environment names)
