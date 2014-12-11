@@ -5,6 +5,7 @@
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
+// @match      https://foreman-test.cern.ch/*
 // @copyright  2013+, Alex Iribarren
 // @downloadURL https://raw.githubusercontent.com/alexiri/foreman-fixer/master/foreman-fixer.user.js
 // @require http://code.jquery.com/jquery-latest.min.js
@@ -83,3 +84,6 @@ if (nameF) {
 $('span:not(.label)[data-original-title]').each(function() {
     $(this).text($(this).attr('data-original-title'));
 });
+
+// Increase the width of the table
+$('#content > table').parent().css('width', '90%');
