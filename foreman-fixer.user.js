@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    0.9
+// @version    1.0
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -100,3 +100,49 @@ $('#content > table').parent().css('width', '90%');
 
 // Compress lines a bit
 addGlobalStyle('.btn-sm { line-height: 1 !important; }');
+
+// Hide incoming hostgroup
+var HIDE_INCOMING = 'hostgroup != incoming';
+$('.input-group').append(
+    $('<input>')
+        .attr('type', 'checkbox')
+        .attr('id', 'hide-incoming')
+        .attr('name', 'hide-incoming')
+    );
+$('#hide-incoming')
+    .after($('<label>').text('Hide incoming hosgroup').attr('for', 'hide-incoming'))
+    .change(function() {
+        var search = $('#search').val();
+        if($(this).is(":checked") && search.indexOf(HIDE_INCOMING) == -1) {
+            $('#search').val(HIDE_INCOMING);
+            if (search != '') {
+                search += ' and ';
+            }
+            search += HIDE_INCOMING;
+            $('#search').val(search)
+        } else if (search.indexOf(HIDE_INCOMING) != -1) {
+            if (search.indexOf(' and ' + HIDE_INCOMING) != -1) {
+                search = search.replace(' and ' + HIDE_INCOMING, '');
+            } else if (search.indexOf(HIDE_INCOMING + ' and ') != -1) {
+                search = search.replace(HIDE_INCOMING + ' and ', '');
+            } else {
+                search = search.replace(HIDE_INCOMING, '');
+            }
+            $('#search').val(search);
+        }
+        $('#search-form').submit();
+    });
+
+function updateHideIncoming() {
+    if($('#search').val().indexOf(HIDE_INCOMING) != -1) {
+        $('#hide-incoming').attr("checked", true);
+    } else {
+        $('#hide-incoming').attr("checked", false);
+    }
+}
+
+$('#search').change(updateHideIncoming);
+
+$(document).ready(function() {
+    updateHideIncoming();
+});
