@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.0
+// @version    1.1
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -10,16 +10,6 @@
 // @downloadURL https://raw.githubusercontent.com/alexiri/foreman-fixer/master/foreman-fixer.user.js
 // @require http://code.jquery.com/jquery-latest.min.js
 // ==/UserScript==
-
-function addGlobalStyle(css) {
-    var head, style;
-    head = document.getElementsByTagName('head')[0];
-    if (!head) { return; }
-    style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = css;
-    head.appendChild(style);
-}
 
 function format(time) {
     var time = new Date(time);
@@ -99,7 +89,7 @@ $('span:not(.label)[data-original-title]').each(function() {
 $('#content > table').parent().css('width', '90%');
 
 // Compress lines a bit
-addGlobalStyle('.btn-sm { line-height: 1 !important; }');
+GM_addStyle('.btn-sm { line-height: 1 !important; }');
 
 // Hide incoming hostgroup
 var HIDE_INCOMING = 'hostgroup != incoming';
