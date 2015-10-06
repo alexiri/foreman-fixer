@@ -100,7 +100,7 @@ $('.input-group').append(
         .attr('name', 'hide-incoming')
     );
 $('#hide-incoming')
-    .after($('<label>').text('Hide incoming hosgroup').attr('for', 'hide-incoming'))
+    .after($('<label>').text('Hide incoming hostgroup').attr('for', 'hide-incoming'))
     .change(function() {
         var search = $('#search').val();
         if($(this).is(":checked") && search.indexOf(HIDE_INCOMING) == -1) {
