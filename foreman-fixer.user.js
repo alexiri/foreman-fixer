@@ -145,3 +145,10 @@ $('#search').change(updateHideIncoming);
 $(document).ready(function() {
     updateHideIncoming();
 });
+
+// Add owner ID
+$('#host_is_owned_by option').each(function() {
+    if (this.value) {
+        this.text = this.text + " (" + this.value.split('-')[0] + ")";
+    }
+});
