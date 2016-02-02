@@ -23,7 +23,6 @@ links.each(function() {
     href = $(this).attr('href');
     if(href && href.indexOf('/reports/') !== -1) {
         var text = $(this).text();
-        //console.log("Found a report! " + text);
         var newtext;
         if(text.indexOf('less than a minute') !== -1) {
             newtext = format(now-30*1000);
