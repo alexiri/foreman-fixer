@@ -37,13 +37,18 @@ links.each(function() {
     }
 });
 
-function addCopy(item) {
-    $(item).html($("<span>").attr('id', 'copyme').text($(item).text()));
+function addCopy(item, text, value) {
+    if (!text) { text = "copy"; }
+    if (!value) { value = $(item).text(); }
+
+    newitem = $("<span>").attr('id', 'copyme').css("visibility", "hidden").css("font-size", "0px").text(value);
     $(item).append($("<span>").html("&nbsp;"));
-    $(item).append(
+    $(item).append(newitem);
+    $(newitem).after(
         $("<a>")
             .attr('id', 'copy-button')
-            .text("copy")
+            .css("float", "right")
+            .text(text)
             .on('click', function (e) {
                 GM_setClipboard($('span#copyme', item).text());
                 e.preventDefault();
@@ -76,6 +81,11 @@ if (nameF) {
 
         consoleF.parent().append(form);
         consoleF.on('click', function (e) { form.submit(); e.preventDefault(); });
+
+        // Add the command-line
+        var host = consoleF[0].host;
+        var command = "ipmitool -I lanplus -U '" + username + "' -P '" + password + "' -H '" + host + "' sol activate";
+        addCopy(consoleF.parent()[0], "sol", command);
     }
 }
 
