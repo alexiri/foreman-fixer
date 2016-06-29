@@ -122,11 +122,11 @@ $('#hide-incoming')
         var search = $('#search').val();
         if($(this).is(":checked") && search.indexOf(HIDE_INCOMING) == -1) {
             $('#search').val(HIDE_INCOMING);
-            if (search != '') {
+            if (search !== '') {
                 search += ' and ';
             }
             search += HIDE_INCOMING;
-            $('#search').val(search)
+            $('#search').val(search);
         } else if (search.indexOf(HIDE_INCOMING) != -1) {
             if (search.indexOf(' and ' + HIDE_INCOMING) != -1) {
                 search = search.replace(' and ' + HIDE_INCOMING, '');
