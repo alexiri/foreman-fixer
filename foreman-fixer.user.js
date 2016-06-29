@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.7
+// @version    1.8
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -105,7 +105,8 @@ $('#content > table').parent()
 GM_addStyle('.btn-sm { line-height: 1 !important; }');
 
 GM_addStyle('#content > table th:not(:first-child) { width: initial !important; }');
-GM_addStyle('#content > table th:nth-child(2) { width: 35% !important; }');
+GM_addStyle('#content > table th:nth-child(2) { width: 25% !important; }');
+GM_addStyle('#content > table th:nth-child(6) { width: 25% !important; }');
 GM_addStyle('#content > table th:last-child { width: 80px !important; }');
 
 // Hide incoming hostgroup
