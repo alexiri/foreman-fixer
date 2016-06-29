@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.5
+// @version    1.6
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -110,7 +110,7 @@ GM_addStyle('#content > table th:last-child { width: 80px !important; }');
 
 // Hide incoming hostgroup
 var HIDE_INCOMING = 'hostgroup != incoming';
-$('.input-group').append(
+$('input[id="search"]').parent().append(
     $('<input>')
         .attr('type', 'checkbox')
         .attr('id', 'hide-incoming')
