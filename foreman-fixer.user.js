@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.8
+// @version    1.9
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -18,26 +18,6 @@ function format(time) {
     var t = new Date(time);
     return ("0"+t.getHours()).slice(-2) + ":" + ("0"+t.getMinutes()).slice(-2);
 }
-
-var now = new Date();
-var links = $('a');
-links.each(function() {
-    href = $(this).attr('href');
-    if(href && href.indexOf('/reports/') !== -1) {
-        var text = $(this).text();
-        var newtext;
-        if(text.indexOf('less than a minute') !== -1) {
-            newtext = format(now-30*1000);
-        } else if(match = /(\d+) minute/.exec(text)) {
-            newtext = format(now-match[1]*60000);
-        } else if(match = /(\d+) hour/.exec(text)) {
-            newtext = "~"+format(now-match[1]*3600000);
-        }
-        if (newtext) {
-            $(this).text(newtext + " ("+text+")");
-        }
-    }
-});
 
 function addCopy(item, text, value) {
     if (!text) { text = "copy"; }
@@ -92,56 +72,22 @@ if (nameF) {
 }
 
 // Don't abbreviate stuff (particularly environment names)
-$('span:not(.label):not(.host-status)[data-original-title]').each(function() {
-    $(this).text($(this).attr('data-original-title'));
-});
-
-// Increase the width of the table
-$('#content > table').parent()
-    .css('width', '90%')
-    .css('max-width', 'none');
+GM_addStyle('.ellipsis { overflow: initial; overflow-wrap: initial; white-space: initial; text-overflow: initial; }');
 
 // Compress lines a bit
 GM_addStyle('.btn-sm { line-height: 1 !important; }');
 
+GM_addStyle('.table-fixed { table-layout: auto; }');
 GM_addStyle('#content > table th:not(:first-child) { width: initial !important; }');
-GM_addStyle('#content > table th:nth-child(2) { width: 25% !important; }');
-GM_addStyle('#content > table th:nth-child(6) { width: 25% !important; }');
+GM_addStyle('#content > table th:nth-child(2) { width: 20% !important; }');
+GM_addStyle('#content > table th:nth-child(6) { width: 20% !important; }');
 GM_addStyle('#content > table th:last-child { width: 80px !important; }');
 
 // Hide incoming hostgroup
 var HIDE_INCOMING = 'hostgroup != incoming';
-$('input[id="search"]').parent().append(
-    $('<input>')
-        .attr('type', 'checkbox')
-        .attr('id', 'hide-incoming')
-        .attr('name', 'hide-incoming')
-    );
-$('#hide-incoming')
-    .after($('<label>').text('Hide incoming hostgroup').attr('for', 'hide-incoming'))
-    .change(function() {
-        var search = $('#search').val();
-        if($(this).is(":checked") && search.indexOf(HIDE_INCOMING) == -1) {
-            $('#search').val(HIDE_INCOMING);
-            if (search !== '') {
-                search += ' and ';
-            }
-            search += HIDE_INCOMING;
-            $('#search').val(search);
-        } else if (search.indexOf(HIDE_INCOMING) != -1) {
-            if (search.indexOf(' and ' + HIDE_INCOMING) != -1) {
-                search = search.replace(' and ' + HIDE_INCOMING, '');
-            } else if (search.indexOf(HIDE_INCOMING + ' and ') != -1) {
-                search = search.replace(HIDE_INCOMING + ' and ', '');
-            } else {
-                search = search.replace(HIDE_INCOMING, '');
-            }
-            $('#search').val(search);
-        }
-        $('#search-form').submit();
-    });
 
 function updateHideIncoming() {
+    if( $('#search').length === 0) return;
     if($('#search').val().indexOf(HIDE_INCOMING) != -1) {
         $('#hide-incoming').attr("checked", true);
     } else {
@@ -149,15 +95,67 @@ function updateHideIncoming() {
     }
 }
 
-$('#search').change(updateHideIncoming);
+function changeStuff() {
+    // Increase the width of the table
+    $('#content > table').parent()
+        .css('width', '90%')
+        .css('max-width', 'none');
 
-$(document).ready(function() {
+    // Add "hide incoming" checkbox
+    $('input[id="search"]').parent().append(
+        $('<input>')
+            .attr('type', 'checkbox')
+            .attr('id', 'hide-incoming')
+            .attr('name', 'hide-incoming')
+        );
+    $('#hide-incoming')
+        .after($('<label>').text('Hide incoming hostgroup').attr('for', 'hide-incoming'))
+        .change(function() {
+            var search = $('#search').val();
+            if($(this).is(":checked") && search.indexOf(HIDE_INCOMING) == -1) {
+                $('#search').val(HIDE_INCOMING);
+                if (search !== '') {
+                    search += ' and ';
+                }
+                search += HIDE_INCOMING;
+                $('#search').val(search);
+            } else if (search.indexOf(HIDE_INCOMING) != -1) {
+                if (search.indexOf(' and ' + HIDE_INCOMING) != -1) {
+                    search = search.replace(' and ' + HIDE_INCOMING, '');
+                } else if (search.indexOf(HIDE_INCOMING + ' and ') != -1) {
+                    search = search.replace(HIDE_INCOMING + ' and ', '');
+                } else {
+                    search = search.replace(HIDE_INCOMING, '');
+                }
+                $('#search').val(search);
+            }
+            $('#search-form').submit();
+        });
+
     updateHideIncoming();
-});
 
-// Add owner ID
-$('#host_is_owned_by option').each(function() {
-    if (this.value) {
-        this.text = this.text + " (" + this.value.split('-')[0] + ")";
-    }
-});
+    // Change links to reports to add absolute times
+    var now = new Date();
+    var links = $('a');
+    links.each(function() {
+        href = $(this).attr('href');
+        if(href && href.indexOf('/config_reports/') !== -1) {
+            var text = $(this).text();
+            var newtext;
+            if(text.indexOf('less than a minute') !== -1) {
+                newtext = format(now-30*1000);
+            } else if(match = /(\d+) minute/.exec(text)) {
+                newtext = format(now-match[1]*60000);
+            } else if(match = /(\d+) hour/.exec(text)) {
+                newtext = "~"+format(now-match[1]*3600000);
+            }
+            if (newtext) {
+                $(this).text(newtext + " ("+text+")");
+            }
+        }
+    });
+}
+
+$(document).ready(function() { changeStuff(); });
+$(document).on('page:load', function() { changeStuff(); });
+$('#search').change(updateHideIncoming);
