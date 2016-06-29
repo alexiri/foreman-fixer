@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.4
+// @version    1.5
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -15,9 +15,8 @@
 // ==/UserScript==
 
 function format(time) {
-    var time = new Date(time);
-    return ("0"+time.getHours()).slice(-2) + ":"
-         + ("0"+time.getMinutes()).slice(-2);
+    var t = new Date(time);
+    return ("0"+t.getHours()).slice(-2) + ":" + ("0"+t.getMinutes()).slice(-2);
 }
 
 var now = new Date();
@@ -98,10 +97,16 @@ $('span:not(.label)[data-original-title]').each(function() {
 });
 
 // Increase the width of the table
-$('#content > table').parent().css('width', '90%');
+$('#content > table').parent()
+    .css('width', '90%')
+    .css('max-width', 'none');
 
 // Compress lines a bit
 GM_addStyle('.btn-sm { line-height: 1 !important; }');
+
+GM_addStyle('#content > table th:not(:first-child) { width: initial !important; }');
+GM_addStyle('#content > table th:nth-child(2) { width: 35% !important; }');
+GM_addStyle('#content > table th:last-child { width: 80px !important; }');
 
 // Hide incoming hostgroup
 var HIDE_INCOMING = 'hostgroup != incoming';
