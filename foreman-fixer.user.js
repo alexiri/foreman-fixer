@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.6
+// @version    1.7
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -92,7 +92,7 @@ if (nameF) {
 }
 
 // Don't abbreviate stuff (particularly environment names)
-$('span:not(.label)[data-original-title]').each(function() {
+$('span:not(.label):not(.host-status)[data-original-title]').each(function() {
     $(this).text($(this).attr('data-original-title'));
 });
 
