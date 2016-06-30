@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Foreman fixer
 // @namespace  http://cern.ch
-// @version    1.10
+// @version    1.11
 // @description  Fixes foreman's "X minutes ago" shit, plus adds "copy" buttons to Console Username and Password
 // @match      https://judy.cern.ch/*
 // @match      https://judy-ext.cern.ch/*
@@ -26,6 +26,9 @@ GM_addStyle('#content > table.table-fixed th:not(:first-child) { width: initial 
 GM_addStyle('#content > table.table-fixed th:nth-child(2) { width: 20% !important; }');
 GM_addStyle('#content > table.table-fixed th:nth-child(6) { width: 20% !important; }');
 GM_addStyle('#content > table.table-fixed th:last-child { width: 80px !important; }');
+
+GM_addStyle('#main { padding: 0px; }');
+GM_addStyle('#content { width: 100%; max-width: none; }');
 
 
 function format(time) {
@@ -65,11 +68,6 @@ function updateHideIncoming() {
 }
 
 function changeStuff() {
-    // Increase the width of the table
-    $('#content > table').parent()
-        .css('width', '90%')
-        .css('max-width', 'none');
-
     // Add "hide incoming" checkbox
     $('input[id="search"]').parent().append(
         $('<input>')
